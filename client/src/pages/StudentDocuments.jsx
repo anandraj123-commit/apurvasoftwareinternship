@@ -20,7 +20,7 @@ class StudentDocuments extends Component {
       },
     };
     axios
-      .post("http://localhost:4002/upload", formData, config)
+      .post(`${process.env.REACT_APP_API_URL}/upload`, formData, config)
       .then((response) => {
         alert("The file is successfully uploaded");
       })

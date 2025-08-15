@@ -17,7 +17,7 @@ class TestPage extends Component {
   async componentDidMount() {
     const downloadPDFLink = document.getElementById("downloadPDFLink");
     const downloadPDFResponse = await fetch(
-      "http://localhost:4002/api/internships/getFile",
+      `${process.env.REACT_APP_API_URL}/api/internships/getFile`,
       {
         method: "post",
         headers: {

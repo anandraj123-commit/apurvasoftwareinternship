@@ -2,7 +2,7 @@
   position: relative;
   min-height: 100vh;
   display: flex;
-  background: url("../assets/images/bg4.jpg");
+  background: url("../assets/images/hero-bg.jpg");
   justify-content: center;
   align-items: center;
   background-repeat: no-repeat;

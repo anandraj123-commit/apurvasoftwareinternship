@@ -71,7 +71,7 @@ class InternshipDetails extends Component {
           const file = this.state.data.files[i][key];
           const divFileElement = document.createElement("a");
           const downloadPDFResponse = await fetch(
-            "http://localhost:4002/api/internships/getFile",
+            `${process.env.REACT_APP_API_URL}/api/internships/getFile`,
             {
               method: "post",
               headers: {

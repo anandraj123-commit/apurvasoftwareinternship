@@ -6,7 +6,7 @@ const routes = require("./routes");
 const db = require("./models");
 const handle = require("./handlers");
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 4002;
 
 
 app.use(cors());

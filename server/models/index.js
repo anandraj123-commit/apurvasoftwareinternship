@@ -11,14 +11,13 @@ mongoose.Promise = global.Promise;
 //   useFindAndModify:false,
 // });
 
-mongoose.connect(
-"mongodb+srv://Apurva_Software_Solutions:Apurvasoftwaresolutions12345@cluster0.safjqky.mongodb.net/internship?retryWrites=true&w=majority&appName=Cluster0",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }
-).then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.error("❌ Connection Error:", err));
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch(err => console.error("❌ Connection Error:", err));
 
 
 module.exports.Student = require("./student");
