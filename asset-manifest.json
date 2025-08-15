@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/anandraj123-commit/apurvasoftwareinternship.git/static/css/main.019cd9c2.chunk.css",
-    "main.js": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/main.3e031dd5.chunk.js",
-    "main.js.map": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/main.3e031dd5.chunk.js.map",
-    "runtime-main.js": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/runtime-main.be4885a9.js",
-    "runtime-main.js.map": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/runtime-main.be4885a9.js.map",
-    "static/css/2.95ed3913.chunk.css": "/anandraj123-commit/apurvasoftwareinternship.git/static/css/2.95ed3913.chunk.css",
-    "static/js/2.1432eab5.chunk.js": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/2.1432eab5.chunk.js",
-    "static/js/2.1432eab5.chunk.js.map": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/2.1432eab5.chunk.js.map",
-    "index.html": "/anandraj123-commit/apurvasoftwareinternship.git/index.html",
-    "precache-manifest.130822fe2cec42cbf6b2ec430d2fd0fb.js": "/anandraj123-commit/apurvasoftwareinternship.git/precache-manifest.130822fe2cec42cbf6b2ec430d2fd0fb.js",
-    "service-worker.js": "/anandraj123-commit/apurvasoftwareinternship.git/service-worker.js",
-    "static/css/2.95ed3913.chunk.css.map": "/anandraj123-commit/apurvasoftwareinternship.git/static/css/2.95ed3913.chunk.css.map",
-    "static/css/main.019cd9c2.chunk.css.map": "/anandraj123-commit/apurvasoftwareinternship.git/static/css/main.019cd9c2.chunk.css.map",
-    "static/js/2.1432eab5.chunk.js.LICENSE.txt": "/anandraj123-commit/apurvasoftwareinternship.git/static/js/2.1432eab5.chunk.js.LICENSE.txt"
+    "main.css": "/apurvasoftwareinternship/static/css/main.019cd9c2.chunk.css",
+    "main.js": "/apurvasoftwareinternship/static/js/main.c71000ab.chunk.js",
+    "main.js.map": "/apurvasoftwareinternship/static/js/main.c71000ab.chunk.js.map",
+    "runtime-main.js": "/apurvasoftwareinternship/static/js/runtime-main.427e19a8.js",
+    "runtime-main.js.map": "/apurvasoftwareinternship/static/js/runtime-main.427e19a8.js.map",
+    "static/css/2.95ed3913.chunk.css": "/apurvasoftwareinternship/static/css/2.95ed3913.chunk.css",
+    "static/js/2.1432eab5.chunk.js": "/apurvasoftwareinternship/static/js/2.1432eab5.chunk.js",
+    "static/js/2.1432eab5.chunk.js.map": "/apurvasoftwareinternship/static/js/2.1432eab5.chunk.js.map",
+    "index.html": "/apurvasoftwareinternship/index.html",
+    "precache-manifest.59b2c90af1b03f11d15443211bf97cf9.js": "/apurvasoftwareinternship/precache-manifest.59b2c90af1b03f11d15443211bf97cf9.js",
+    "service-worker.js": "/apurvasoftwareinternship/service-worker.js",
+    "static/css/2.95ed3913.chunk.css.map": "/apurvasoftwareinternship/static/css/2.95ed3913.chunk.css.map",
+    "static/css/main.019cd9c2.chunk.css.map": "/apurvasoftwareinternship/static/css/main.019cd9c2.chunk.css.map",
+    "static/js/2.1432eab5.chunk.js.LICENSE.txt": "/apurvasoftwareinternship/static/js/2.1432eab5.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.be4885a9.js",
+    "static/js/runtime-main.427e19a8.js",
     "static/css/2.95ed3913.chunk.css",
     "static/js/2.1432eab5.chunk.js",
     "static/css/main.019cd9c2.chunk.css",
-    "static/js/main.3e031dd5.chunk.js"
+    "static/js/main.c71000ab.chunk.js"
   ]
 }
