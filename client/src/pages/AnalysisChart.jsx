@@ -1,7 +1,33 @@
 import React, { Component } from "react";
-import { HorizontalBar, Doughnut, Line, Bar, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  PointElement,
+  LineElement,
+} from "chart.js";
+import { Bar, Doughnut, Line, Pie } from "react-chartjs-2";
 import { getAllInternshipStats } from "../store/actions";
 import { connect } from "react-redux";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  PointElement,
+  LineElement
+);
+
 class AnalyticsCharts extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +41,7 @@ class AnalyticsCharts extends Component {
     };
     this.setData = this.setData.bind(this);
   }
+
   sortKeys(obj_1) {
     var key = Object.keys(obj_1).sort(function order(key1, key2) {
       if (key1 < key2) return -1;
@@ -33,6 +60,7 @@ class AnalyticsCharts extends Component {
     }
     return obj_1;
   }
+
   setData(chartsData) {
     let hlabel = [],
       llabel = [],
@@ -61,7 +89,7 @@ class AnalyticsCharts extends Component {
     for (let i = 0; i < chartsData.datewiseStatusDistribution.length; i++) {
       const element = chartsData.datewiseStatusDistribution[i];
       tdata[element._id.sdate] = tdata[element._id.sdate] || {
-        N: 0,
+        Pending: 0,
         Approved: 0,
         Rejected: 0,
       };
@@ -74,9 +102,9 @@ class AnalyticsCharts extends Component {
       if (tdata.hasOwnProperty(k)) {
         const element = tdata[k];
         tdate.push(k);
-        set["Pending"].push(element["Pending"]);
-        set["Approved"].push(element["Approved"]);
-        set["Rejected"].push(element["Rejected"]);
+        set["Pending"].push(element["Pending"] || 0);
+        set["Approved"].push(element["Approved"] || 0);
+        set["Rejected"].push(element["Rejected"] || 0);
       }
     }
     this.setState({
@@ -101,7 +129,8 @@ class AnalyticsCharts extends Component {
         ],
       },
     });
-    let rdata = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    let rdata = Array(11).fill(0);
     let rdataset = {
       FE: [
         {
@@ -136,7 +165,6 @@ class AnalyticsCharts extends Component {
             "#FF002B",
             "#B503FC",
           ],
-
           data: [...rdata],
         },
       ],
@@ -155,7 +183,6 @@ class AnalyticsCharts extends Component {
             "#FF002B",
             "#B503FC",
           ],
-
           data: [...rdata],
         },
       ],
@@ -174,7 +201,6 @@ class AnalyticsCharts extends Component {
             "#FF002B",
             "#B503FC",
           ],
-
           data: [...rdata],
         },
       ],
@@ -187,13 +213,14 @@ class AnalyticsCharts extends Component {
         rdataset.SE[0].data[parseInt(element._id.div) - 1] = element.count;
       } else if (element._id.year === "TE") {
         rdataset.TE[0].data[parseInt(element._id.div) - 1] = element.count;
-      } else {
+      } else if (element._id.year === "BE") {
         rdataset.BE[0].data[parseInt(element._id.div) - 1] = element.count;
       }
     }
     this.setState({
       radarChartData: rdataset,
     });
+
     this.setState({
       lineChartData: {
         labels: llabel,
@@ -202,20 +229,14 @@ class AnalyticsCharts extends Component {
             label: "Month-wise distribution",
             fill: true,
             data: ldata,
+            backgroundColor: "rgba(54, 162, 235, 0.5)",
+            borderColor: "rgba(54, 162, 235, 1)",
+            tension: 0.3,
           },
         ],
-        options: {
-          scales: {
-            xAxes: [
-              {
-                type: "date",
-                distribution: "linear",
-              },
-            ],
-          },
-        },
       },
     });
+
     this.setState({
       doughnutData: {
         datasets: [
@@ -228,6 +249,7 @@ class AnalyticsCharts extends Component {
         labels: plabel,
       },
     });
+
     this.setState({
       horizontalBarChartData: {
         labels: hlabel,
@@ -250,7 +272,8 @@ class AnalyticsCharts extends Component {
 
   async componentDidMount() {
     const { getAllInternshipStats } = this.props;
-    getAllInternshipStats().then(() => this.setData(this.props.chart));
+    await getAllInternshipStats();
+    this.setData(this.props.chart);
   }
 
   render() {
@@ -305,7 +328,7 @@ class AnalyticsCharts extends Component {
               Division-wise
             </a>
             <a
-              class="nav-item nav-link"
+              className="nav-item nav-link"
               id="nav-ovw-tab"
               data-toggle="tab"
               href="#nav-ovw"
@@ -318,6 +341,7 @@ class AnalyticsCharts extends Component {
           </div>
         </nav>
         <div className="tab-content" id="nav-tabContent">
+          {/* Top 5 Workplaces */}
           <div
             className="tab-pane fade show active"
             id="nav-t5w"
@@ -328,17 +352,22 @@ class AnalyticsCharts extends Component {
               <div className="card card-body mt-5">
                 <div className="row">
                   <div className="col-sm-8">
-                    <HorizontalBar
+                    <Bar
                       data={this.state.horizontalBarChartData}
                       options={{
+                        indexAxis: "y",
                         scales: {
-                          xAxes: [
-                            {
-                              ticks: {
-                                beginAtZero: true,
-                              },
-                            },
-                          ],
+                          x: {
+                            beginAtZero: true,
+                          },
+                        },
+                        responsive: true,
+                        plugins: {
+                          legend: { position: "top" },
+                          title: {
+                            display: true,
+                            text: "Top 5 Companies",
+                          },
                         },
                       }}
                     />
@@ -353,8 +382,9 @@ class AnalyticsCharts extends Component {
                 </div>
               </div>
             </div>
-            <div></div>
           </div>
+
+          {/* Year-wise */}
           <div
             className="tab-pane fade"
             id="nav-ywd"
@@ -378,6 +408,8 @@ class AnalyticsCharts extends Component {
               </div>
             </div>
           </div>
+
+          {/* Month-wise */}
           <div
             className="tab-pane fade"
             id="nav-mwd"
@@ -390,7 +422,6 @@ class AnalyticsCharts extends Component {
                   <div className="col-sm-10 offset-1">
                     <Line data={this.state.lineChartData} />
                     <p style={{ textAlign: "center" }}>
-                      {" "}
                       <small className="text-muted">
                         The above graph shows the number of students interning
                         through time.
@@ -401,6 +432,8 @@ class AnalyticsCharts extends Component {
               </div>
             </div>
           </div>
+
+          {/* Division-wise */}
           <div
             className="tab-pane fade"
             id="nav-dwd"
@@ -525,8 +558,10 @@ class AnalyticsCharts extends Component {
               </div>
             </div>
           </div>
+
+          {/* Overview */}
           <div
-            class="tab-pane fade"
+            className="tab-pane fade"
             id="nav-ovw"
             role="tabpanel"
             aria-labelledby="nav-ovw-tab"

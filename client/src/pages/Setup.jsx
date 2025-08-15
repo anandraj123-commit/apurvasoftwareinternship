@@ -21,7 +21,7 @@ class Setup extends Component {
     return (
       <>
         <nav id="navbar-example2" class="navbar navbar-dark bg-dark text-light">
-          PICT IMS Documentation
+          Apurva Software Solutions
           <ul class="nav">
             <li class="nav-item">
               <a class="nav-link" href="#overview">
@@ -51,7 +51,7 @@ class Setup extends Component {
               >
                 <h2 id="overview">Overview</h2>
                 <div>
-                  Internship Management System for PICT. This web application is
+                Apurva Software Solutions Internship Management System. This web application is
                   based on MERN Stack - (MongoDB, Express, React, Node.js). The
                   documentation is organized into two parts: Setup and API
                   <br />

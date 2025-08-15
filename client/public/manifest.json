@@ -1,14 +1,14 @@
 {
-  "short_name": "PICT IMS",
-  "name": "Internship Management System",
+  "short_name": "Apurva Software Solutions",
+  "name": "Apurva Software Solutions Internship Management System",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "ASS.png",
       "type": "image/png",
       "sizes": "192x192"
     },

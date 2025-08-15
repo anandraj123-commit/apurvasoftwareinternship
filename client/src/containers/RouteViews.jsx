@@ -34,6 +34,7 @@ import StudentReport from "../pages/StudentReport";
 import GuidelinesInternship from "../pages/GuidelinesInternship";
 import FacStudentReport from "../pages/FacStudentReport";
 import Report from "../pages/AICTEReport";
+import ResetPassword from "../pages/ResetPassword";
 
 const RouteViews = ({ auth }) => {
   const user = localStorage.getItem("user");
@@ -335,6 +336,7 @@ const RouteViews = ({ auth }) => {
         />
 
         <Route exact path="/forgotpassword" render={() => <ForgotPassword />} />
+        <Route path="/reset/:token" component={ResetPassword} />
         <Route component={NotFoundPage} />
       </Switch>
     </main>

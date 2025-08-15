@@ -3,138 +3,223 @@ import { connect } from "react-redux";
 import { authUser, logout } from "../store/actions";
 import { Link } from "react-router-dom";
 import { MdError } from "react-icons/md";
-import ErrorMessage from "../components/ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
+import "../assets/css/Auth_2.css";
 
 class Auth_2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: "",
       emailId: "",
+      password: "",
       confirmpassword: "",
-      message: "",
+      errors: {},
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-  }
+  // Validate individual field on each keystroke
+  validateField = (name, value) => {
+    const errors = { ...this.state.errors };
 
-  handleSubmit(e) {
-    var str = this.state.username;
-    var str1 = str.substring(0, 3);
-    if (this.state.password === this.state.confirmpassword) {
-      if (
-        str1 === "C2K" ||
-        str1 === "I2K" ||
-        (str1 === "E2K" && str.length === 11)
-      ) {
-        const { username, password, emailId } = this.state;
-        const { authType } = this.props;
-        e.preventDefault();
-        this.props.authUser(authType || "login", {
-          username,
-          password,
-          emailId,
-        });
+    if (name === "username") {
+      if (!value) {
+        errors.username = "Username is required";
+      } else if (value.length !== 11) {
+        errors.username = "Username must be exactly 11 characters";
       } else {
-        alert("Invalid ID, Please check again ");
+        delete errors.username;
       }
-    } else {
-      alert("Error! Check form fields again... ");
     }
-  }
-  handleConfirmPassword(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    if (this.state.password !== e.target.value) {
-      this.setState({ message: "Passwords do not match!" });
-    } else {
-      this.setState({ message: "" });
+
+    if (name === "emailId") {
+      const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!value) {
+        errors.emailId = "Email is required";
+      } else if (!emailRegex.test(value)) {
+        errors.emailId = "Enter a valid email address";
+      } else {
+        delete errors.emailId;
+      }
     }
-  }
+
+    if (name === "password") {
+      const pwdRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+      if (!value) {
+        errors.password = "Password is required";
+      } else if (!pwdRegex.test(value)) {
+        errors.password =
+          "Password must be 8+ chars with uppercase, lowercase, number, and special char";
+      } else {
+        delete errors.password;
+      }
+    }
+
+    if (name === "confirmpassword") {
+      if (!value) {
+        errors.confirmpassword = "Confirm password is required";
+      } else if (value !== this.state.password) {
+        errors.confirmpassword = "Passwords do not match!";
+      } else {
+        delete errors.confirmpassword;
+      }
+    }
+
+    this.setState({ errors });
+  };
+
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value }, () =>
+      this.validateField(name, value)
+    );
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { username, emailId, password, confirmpassword, errors } = this.state;
+
+    if (
+      !username ||
+      !emailId ||
+      !password ||
+      !confirmpassword ||
+      Object.keys(errors).length > 0
+    ) {
+      alert("Please fix the validation errors before submitting.");
+      return;
+    }
+
+    const { authType } = this.props;
+    this.props.authUser(authType || "login", { username, password, emailId });
+
+    this.setState({
+      username: "",
+      emailId: "",
+      password: "",
+      confirmpassword: "",
+      errors: {},
+    });
+  };
 
   render() {
-    const { username, password, emailId, confirmpassword } = this.state;
+    const { username, emailId, password, confirmpassword, errors } = this.state;
+
+    const isFormInvalid =
+      !username || !emailId || !password || !confirmpassword || Object.keys(errors).length > 0;
+
     return (
       <div className="section">
         <div className="container">
           <div className="user signinBx">
             <div className="imgBx">
+              <img src="" alt="Apurva Software Solutions Internship Programme" />
               <p>Internship Management System</p>
             </div>
             <div className="formBx">
-              <form onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit} autoComplete="off">
                 <div className="Errorbox">
-                  <div className="my-4 text-center" style={{ zIndex: "10" }}>
+                  <div className="my-4 text-center" style={{ zIndex: 10 }}>
                     <ErrorMessage />
                   </div>
                 </div>
                 <h2>Student Registration</h2>
-                <input
-                  required
-                  type="text"
-                  value={username}
-                  name="username"
-                  placeholder="Registration ID (eg: C2K...)"
-                  className="form-control"
-                  minLength="11"
-                  maxLength="11"
-                  autoComplete="off"
-                  onChange={this.handleChange}
-                />
 
-                <input
-                  required
-                  type="email"
-                  value={emailId}
-                  name="emailId"
-                  placeholder="Email ID"
-                  className="form-control"
-                  autoComplete="off"
-                  onChange={this.handleChange}
-                />
+                <div className="input-container">
+                  <input
+                    type="text"
+                    value={username}
+                    name="username"
+                    placeholder="Username"
+                    className="form-control"
+                    autoComplete="off"
+                    onChange={this.handleChange}
+                  />
+                  <div className="error-space">
+                    {errors.username && (
+                      <small className="text-danger">
+                        <MdError /> {errors.username}
+                      </small>
+                    )}
+                  </div>
+                </div>
 
-                <input
-                  required
-                  type="password"
-                  value={password}
-                  name="password"
-                  placeholder="Password"
-                  className="form-control"
-                  autoComplete="off"
-                  onChange={this.handleChange}
-                />
+                <div className="input-container">
+                  <input
+                    type="email"
+                    value={emailId}
+                    name="emailId"
+                    placeholder="Email ID"
+                    className="form-control"
+                    autoComplete="off"
+                    onChange={this.handleChange}
+                  />
+                  <div className="error-space">
+                    {errors.emailId && (
+                      <small className="text-danger">
+                        <MdError /> {errors.emailId}
+                      </small>
+                    )}
+                  </div>
+                </div>
 
-                <input
-                  required
-                  type="password"
-                  value={confirmpassword}
-                  name="confirmpassword"
-                  placeholder="Confirm Password"
-                  className="form-control"
-                  autoComplete="off"
-                  onChange={this.handleConfirmPassword}
-                />
-                {this.state.message && (
-                  <small className="text-danger">
-                    <span className="mr-1">
-                      <MdError
-                        style={{ margin: -2, padding: -2 }}
-                        color="crimson"
-                      />
-                    </span>
-                    {this.state.message}
-                  </small>
-                )}
-                <div className="text-center">
+                <div className="input-container">
+                  <input
+                    type="password"
+                    value={password}
+                    name="password"
+                    placeholder="Password"
+                    className="form-control"
+                    autoComplete="new-password"
+                    onChange={this.handleChange}
+                  />
+                  <div className="error-space">
+                    {errors.password && (
+                      <small className="text-danger">
+                        <MdError /> {errors.password}
+                      </small>
+                    )}
+                  </div>
+                </div>
+
+                <div className="input-container">
+                  <input
+                    type="password"
+                    value={confirmpassword}
+                    name="confirmpassword"
+                    placeholder="Confirm Password"
+                    className="form-control"
+                    autoComplete="new-password"
+                    onChange={this.handleChange}
+                  />
+                  <div className="error-space">
+                    {errors.confirmpassword && (
+                      <small className="text-danger">
+                        <MdError /> {errors.confirmpassword}
+                      </small>
+                    )}
+                  </div>
+                </div>
+
+                <div className="text-center mt-3">
                   <Link className="btn-custom mr-2" to="/login">
                     <b>Login</b>
                   </Link>
-                  <input type="submit" value="Register" />
+                  <input
+                    type="submit"
+                    value="Register"
+                    disabled={isFormInvalid}
+                    style={{
+                      backgroundColor: isFormInvalid ? "#ccc" : "green",
+                      color: "#fff",
+                      cursor: isFormInvalid ? "not-allowed" : "pointer",
+                      border: "none",
+                      padding: "8px 16px",
+                      marginLeft: "10px",
+                    }}
+                  />
                 </div>
               </form>
             </div>

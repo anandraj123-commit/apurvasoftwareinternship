@@ -3,6 +3,8 @@ import { SET_CURRENT_USER } from "../actionTypes";
 import api from "../../services/api";
 import { addSuccess, removeSuccessMessage } from "./success";
 
+
+
 export const setCurrentUser = (user) => ({
   type: SET_CURRENT_USER,
   user,
@@ -30,9 +32,11 @@ export const authUser = (path, data) => {
       api.setToken(token);
       dispatch(setCurrentUser(user));
       dispatch(removeError());
+      return user;
     } catch (err) {
       const error = err.response.data;
       dispatch(addError(error.message));
+      return error;
     }
   };
 };
@@ -87,6 +91,25 @@ export const forgotPassword = (data) => {
       dispatch(
         addSuccess("Password change request has been sent to your Email!")
       );
+    } catch (err) {
+      const error = err.response.data;
+      dispatch(removeSuccessMessage());
+      dispatch(addError(error.message));
+    }
+    // Redirect after 3 seconds in both cases
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 3000);
+  };
+};
+
+export const resetUserPassword = (token, data) => {
+  return async (dispatch) => {
+    try {
+      const user = await api.call("put", `auth/user/reset/${token}`, data);
+      dispatch(setCurrentUser(user));
+      dispatch(removeError());
+      dispatch(addSuccess("Password changed!"));
     } catch (err) {
       const error = err.response.data;
       dispatch(removeSuccessMessage());

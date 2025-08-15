@@ -270,7 +270,7 @@ class Report extends Component {
         </tr>
         <tr>
           <td>
-            <b> PICT Research Internship</b>
+            <b> Apurva Software Solutions Internship</b>
           </td>
         </tr>
         <tr>
@@ -463,7 +463,7 @@ class Report extends Component {
         </tr>
         <tr>
           <td>
-            <b> PICT Research Internship</b>
+            <b> Apurva Software Solutions Internship</b>
           </td>
         </tr>
         <tr>

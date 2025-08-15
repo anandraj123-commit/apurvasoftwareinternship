@@ -29,7 +29,7 @@ class Sidenav_f extends Component {
     const activeNow = this.props.activeComponent; //get the sidenav component number that is currently active/visible
     return (
       <div className="sidenav">
-        <h4 className="text-light text-center mt-2">PICT IMS</h4>
+        <h4 className="text-light text-center mt-2">Apurva Software Solutions</h4>
         <p className="mt-4">Menu</p>
         <ul id="ul">
           <Link to="/facultyprofile">

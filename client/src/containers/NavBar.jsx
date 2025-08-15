@@ -6,7 +6,7 @@ import { logout } from "../store/actions";
 const Navbar = ({ auth, logout }) => (
   <div className="navbar navbar-expand-lg navbar-dark bg-dark">
     <a className="navbar-brand" href="#"> 
-    PICT IMS
+    Apurva Software Solutions
     </a>
     <div className="navbar-brand">
     {(auth.isAuthenticated ||

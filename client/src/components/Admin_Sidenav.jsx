@@ -28,7 +28,7 @@ class Admin_Sidenav extends Component {
     const activeNow = this.props.activeComponent;
     return (
       <>
-        <h4 className="text-light text-center mt-2">PICT IMS</h4>
+        <h4 className="text-light text-center mt-2">Apurva Software Solutions</h4>
         <p className="mt-4">Menu</p>
         <ul id="ul">
           <Link to="/admin/" className="adminProfile">

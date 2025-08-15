@@ -24,7 +24,7 @@ class NotFoundPage extends Component {
             Click here to go back
           </button>
         </div>
-        <p>PICT IMS</p>
+        <p>Apurva Software Solutions</p>
       </div>
     );
   }

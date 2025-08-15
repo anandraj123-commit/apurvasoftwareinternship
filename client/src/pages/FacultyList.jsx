@@ -11,60 +11,65 @@ import {
   MdBuild,
   MdSearch,
 } from "react-icons/md";
+
 class FacultyList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      faculties: [
-        {
-          _id: "",
-          name: { firstname: "", lastname: "" },
-          currentClass: { year: "", div: "" },
-          department: "",
-          username: "",
-          designation: "",
-          emailId: "",
-        },
-      ],
+      faculties: [],
     };
+
+    // Bind methods
+    this.handleListView = this.handleListView.bind(this);
+    this.handleCardView = this.handleCardView.bind(this);
+    this.filter = this.filter.bind(this);
+    this.expandInline = this.expandInline.bind(this);
   }
+
   async componentDidMount() {
     const { getFaculty } = this.props;
-    getFaculty()
-      .then(this.setState({ isLoading: false }))
-      .then(() => this.loadData(this.props.faculty));
+    await getFaculty();
+
+    if (this.props.faculty && Array.isArray(this.props.faculty)) {
+      this.setState({ faculties: this.props.faculty, isLoading: false });
+    } else {
+      this.setState({ isLoading: false });
+    }
   }
-  loadData(facultylist) {
-    this.setState({ faculties: facultylist });
-  }
+
   handleListView() {
     let elements = document.getElementsByClassName("card-body");
     for (let i = 0; i < elements.length; i++) {
       elements[i].style.display = "none";
     }
   }
-  filter(e) {
-    var filter, cards, cardContent, i;
-    filter = e.target.value.toUpperCase();
-    cards = document.getElementsByClassName("card");
-    for (i = 0; i < cards.length; i++) {
-      cardContent = cards[i].querySelector(".individual-card");
-      if (cardContent.innerText.toUpperCase().indexOf(filter) > -1) {
-        cards[i].style.display = "";
-      } else {
-        cards[i].style.display = "none";
-      }
-    }
-  }
+
   handleCardView() {
     let elements = document.getElementsByClassName("card-body");
     for (let i = 0; i < elements.length; i++) {
       elements[i].style.display = "block";
     }
   }
+
+  filter(e) {
+    const filter = e.target.value.toUpperCase();
+    const cards = document.getElementsByClassName("card");
+
+    for (let i = 0; i < cards.length; i++) {
+      const cardContent = cards[i].querySelector(".individual-card");
+      if (cardContent && cardContent.innerText.toUpperCase().includes(filter)) {
+        cards[i].style.display = "";
+      } else {
+        cards[i].style.display = "none";
+      }
+    }
+  }
+
   expandInline(e) {
-    e.target.parentElement.lastChild.style.display = "block";
+    if (e.target.parentElement && e.target.parentElement.lastChild) {
+      e.target.parentElement.lastChild.style.display = "block";
+    }
   }
 
   renderCardData() {
@@ -72,12 +77,13 @@ class FacultyList extends Component {
       const {
         _id,
         username,
-        name,
-        currentClass,
+        name = {},
+        currentClass = {},
         department,
         designation,
         emailId,
       } = faculty;
+
       return (
         <div
           className="col-sm-6"
@@ -85,10 +91,10 @@ class FacultyList extends Component {
           name="facultyCard"
           id={
             username +
-            name.firstname +
-            name.lastname +
-            currentClass.year +
-            currentClass.div +
+            (name.firstname || "") +
+            (name.lastname || "") +
+            (currentClass.year || "") +
+            (currentClass.div || "") +
             department +
             designation
           }
@@ -97,45 +103,20 @@ class FacultyList extends Component {
             <div className="individual-card">
               <div
                 className="card-header"
-                onClick={this.expandInline.bind(this)}
+                onClick={this.expandInline}
+                style={{ cursor: "pointer" }}
               >
-                Prof. {name.firstname + " " + name.lastname}
+                Prof. {`${name.firstname || ""} ${name.lastname || ""}`}
                 <span className="float-right">
                   {designation === "ClassCoordinator" ? (
-                    <span className="mx-1">
-                      <MdLocalLibrary
-                        style={{ margin: -1, padding: -1 }}
-                        size="24"
-                        color="firebrick"
-                      />
-                    </span>
+                    <MdLocalLibrary size="24" color="firebrick" />
                   ) : designation === "Admin" ? (
-                    <span className="mx-1">
-                      <MdBuild
-                        style={{ margin: -1, padding: -1 }}
-                        size="24"
-                        color="blue"
-                      />
-                    </span>
+                    <MdBuild size="24" color="blue" />
                   ) : designation === "DepartmentInternshipCoordinator" ? (
-                    <span className="mx-1">
-                      <MdAssignmentInd
-                        style={{ margin: -1, padding: -1 }}
-                        size="24"
-                        color="green"
-                      />
-                    </span>
+                    <MdAssignmentInd size="24" color="green" />
                   ) : designation === "CollegeInternshipCoordinator" ? (
-                    <span className="mx-1">
-                      <MdSupervisorAccount
-                        style={{ margin: -1, padding: -1 }}
-                        size="24"
-                        color="orange"
-                      />
-                    </span>
-                  ) : (
-                    <span></span>
-                  )}
+                    <MdSupervisorAccount size="24" color="orange" />
+                  ) : null}
                 </span>
                 <br />
                 <small className="text-muted">Username: {username}</small>
@@ -153,7 +134,6 @@ class FacultyList extends Component {
                 <br />
                 <b> Email Id : </b>
                 {emailId}
-                <br />
               </div>
             </div>
           </div>
@@ -161,6 +141,7 @@ class FacultyList extends Component {
       );
     });
   }
+
   render() {
     return (
       <div>
@@ -181,31 +162,13 @@ class FacultyList extends Component {
                       className="btn btn-secondary btn-sm"
                       onClick={this.handleListView}
                     >
-                      <input
-                        type="radio"
-                        name="options"
-                        id="option1"
-                        autoComplete="off"
-                      />
-                      <MdFormatListBulleted
-                        style={{ margin: -1, padding: -1 }}
-                        color="white"
-                      />
+                      <MdFormatListBulleted color="white" />
                     </label>
                     <label
                       className="btn btn-secondary active btn-sm"
                       onClick={this.handleCardView}
                     >
-                      <input
-                        type="radio"
-                        name="options"
-                        id="option2"
-                        autoComplete="off"
-                      />
-                      <MdViewAgenda
-                        style={{ margin: -1, padding: -1 }}
-                        color="white"
-                      />
+                      <MdViewAgenda color="white" />
                     </label>
                   </div>
                 </div>
@@ -214,10 +177,7 @@ class FacultyList extends Component {
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
                   <span className="input-group-text" id="filtersearch">
-                    <span>
-                      <MdSearch style={{ padding: -2, margin: -2 }} />
-                      {"  "} Search
-                    </span>
+                    <MdSearch /> Search
                   </span>
                 </div>
                 <input
@@ -231,7 +191,13 @@ class FacultyList extends Component {
                 />
               </div>
               <hr />
-              <div className="row">{this.renderCardData()}</div>
+              <div className="row">
+                {this.state.isLoading ? (
+                  <p>Loading...</p>
+                ) : (
+                  this.renderCardData()
+                )}
+              </div>
             </div>
           </div>
         </div>
