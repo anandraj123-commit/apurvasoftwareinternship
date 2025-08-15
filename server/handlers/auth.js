@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const transport = require("nodemailer-smtp-transport");
 require("dotenv").config();
 
+
 const options = {
   service: "gmail",
   auth: {
@@ -17,51 +18,89 @@ const options = {
 };
 const client = nodemailer.createTransport(transport(options));
 
-exports.register = async (req, res, next) => {
-  try {
-    const student = await db.Student.create(req.body);
-    if (student) {
-      let link =
-        "<h2>Welcome to IMS!</h2><br/><h4>Your registration to IMS as a student was successful.</h4><br/>";
+const db = require("../models"); // your Student model
+const client = require("../config/nodemailer"); // your nodemailer client
 
-      var email = {
-        from: process.env.EMAILFROM,
-        to: student.emailId,
-        subject: "Registration Successful",
-        html: link,
-      };
-      client.sendMail(email, (err, info) => {
-        if (err) {
-          err.message = "Could not send email" + err;
-        } else if (info) {
-          const { id, username } = student;
-          const token = jwt.sign({ id, username }, process.env.SECRET);
-          res.status(201).json({ id, username, token });
-        }
-      });
-    } else {
-      err.message = "Something went wrong try again!";
-      next(err);
+exports.register = async (req, res, next) => {
+  console.log("Registration request received");
+
+  try {
+    // Create new student
+    const student = await db.Student.create(req.body);
+    console.log("student", student);
+
+    if (!student) {
+      const err = new Error("Something went wrong. Please try again!");
+      return next(err);
     }
+
+    // Prepare welcome email
+    const emailContent = `
+      <h2>Welcome to IMS!</h2>
+      <h4>Your registration as a student was successful.</h4>
+    `;
+
+    const email = {
+      from: process.env.EMAILFROM,
+      to: student.emailId,
+      subject: "Registration Successful",
+      html: emailContent,
+    };
+
+    // Send email
+    client.sendMail(email, (err, info) => {
+      if (err) {
+        console.error("Email sending failed:", err);
+        // Still respond with success even if email fails
+        return res.status(201).json({
+          message: "Registration successful, but email could not be sent.",
+          student: {
+            id: student.id,
+            username: student.username,
+            emailId: student.emailId,
+          },
+        });
+      }
+
+      // Respond with success
+      res.status(201).json({
+        message: "Registration successful. Welcome email sent.",
+        student: {
+          id: student.id,
+          username: student.username,
+          emailId: student.emailId,
+        },
+      });
+    });
   } catch (err) {
+    // Handle duplicate username error
     if (err.code === 11000) {
-      err.message = "Sorry username is already taken.";
+      err.message = "Sorry, username is already taken.";
     }
     next(err);
   }
 };
 
+
 exports.login = async (req, res, next) => {
   try {
     const student = await db.Student.findOne({ username: req.body.username });
-    const { id, username } = student;
-    const valid = await student.comparePassword(req.body.password);
-    if (valid) {
-      const token = jwt.sign({ id, username }, process.env.SECRET);
-      res.json({ id, username, token });
-    } else {
-      throw new Error();
+
+    if (!student) {
+      throw new Error("Invalid username/password");
     }
+
+    const valid = await student.comparePassword(req.body.password);
+    if (!valid) {
+      throw new Error("Invalid username/password");
+    }
+
+    const token = jwt.sign(
+      { id: student.id, username: student.username },
+      process.env.SECRET
+    );
+
+    res.json({ id: student.id, username: student.username, token });
   } catch (err) {
     err.message = "Invalid username/password";
     next(err);
@@ -194,3 +233,47 @@ exports.resetStudentPassword = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
+
+exports.resetUserPassword = async (req, res, next) => {
+  const { token } = req.params;
+  const { password:newpassword } = req.body;
+  console.log("req.body",req.body);
+
+  try {
+    // Try to find in Students first
+    let user =
+      (await db.Student.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: Date.now() },
+      })) ||
+      (await db.Faculty.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: Date.now() },
+      }));
+
+      console.log("user",user);
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired reset link" });
+    }
+
+    // Hash and update password
+    user.password = newpassword ;
+
+    // Clear token fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+

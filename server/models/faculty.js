@@ -65,6 +65,8 @@ const facultySchema = new mongoose.Schema({
       ref: "Internship",
     },
   ],
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
 });
 
 facultySchema.pre("save", async function (next) {

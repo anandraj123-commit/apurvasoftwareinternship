@@ -45,6 +45,8 @@ const studentSchema = new mongoose.Schema({
   },
   created: { type: Date, default: Date.now },
   internships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Internship" }],
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 });
 
 studentSchema.pre("save", async function (next) {

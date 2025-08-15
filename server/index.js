@@ -8,10 +8,14 @@ const handle = require("./handlers");
 const app = express();
 const port = process.env.PORT;
 
+
 app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" })); // accept data with 50mb limit
 
 app.get("/", (req, res) => res.json({ hello: "World" }));
+console.log("i like it");
+
+
 app.use("/api/auth", routes.auth);
 app.use("/api/internships", routes.internships);
 app.use("/api/admin", routes.admin);
