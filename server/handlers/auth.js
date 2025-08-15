@@ -18,8 +18,7 @@ const options = {
 };
 const client = nodemailer.createTransport(transport(options));
 
-const db = require("../models"); // your Student model
-const client = require("../config/nodemailer"); // your nodemailer client
+
 
 exports.register = async (req, res, next) => {
   console.log("Registration request received");

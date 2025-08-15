@@ -23,7 +23,16 @@ class Auth extends Component {
     };
   }
 
-  // Validation on every keystroke
+  componentDidMount() {
+    // Reset fields after mount to override cached values
+    this.setState({
+      username: "",
+      password: "",
+      User_type: "1",
+      errors: {},
+    });
+  }
+
   validateField = (name, value) => {
     let errors = { ...this.state.errors };
 
@@ -46,10 +55,8 @@ class Auth extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const { username, password, User_type } = this.state;
-    const { authType } = this.props;
-    const { authUser, authUser_a, authUser_f } = this.props;
+    const { authType, authUser, authUser_a, authUser_f } = this.props;
 
-    // Only submit if both fields are valid
     if (!username.trim() || !password) return;
 
     if (User_type === "1") {
@@ -70,11 +77,11 @@ class Auth extends Component {
         <div className="container">
           <div className="user signinBx">
             <div className="imgBx">
-              <p>Internship Management System</p>
+              <p>Apurva Internship Connect</p>
             </div>
 
             <div className="formBx">
-              <form onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit} autoComplete="off">
                 <div className="Errorbox">
                   <div className="my-4 text-center" style={{ zIndex: "10" }}>
                     <ErrorMessage />
@@ -82,6 +89,7 @@ class Auth extends Component {
                 </div>
                 <h2>Sign In</h2>
 
+                {/* Username Field */}
                 <div className="input-container">
                   <input
                     type="text"
@@ -89,7 +97,14 @@ class Auth extends Component {
                     name="username"
                     placeholder="Username"
                     autoComplete="off"
-                    className="input form-control"
+                    style={{
+                      "::placeholder": {}, // ignored in JSX, so we'll use color via class
+                    }}
+                    className={
+                      !errors.username
+                        ? "input form-control placeholder-black"
+                        : "input form-control error-class placeholder-white"
+                    }
                     onChange={this.handleChange}
                   />
                   <small className="text-danger error-space">
@@ -97,26 +112,35 @@ class Auth extends Component {
                   </small>
                 </div>
 
+                {/* Password Field */}
                 <div className="input-container">
                   <input
                     type="password"
                     value={password}
                     name="password"
                     placeholder="Password"
-                    className="input form-control"
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    className={
+                      !errors.password
+                        ? "input form-control placeholder-black"
+                        : "input form-control error-class placeholder-white"
+                    }
                     onChange={this.handleChange}
                   />
                   <small className="text-danger error-space">
                     {errors.password || "\u00A0"}
                   </small>
                 </div>
-
+                {/* User Type Selector */}
                 <select
                   name="User_type"
                   value={User_type}
                   onChange={this.handleChange}
-                  className="form-control"
+                  className={
+                    !errors.password
+                      ? "form-control"
+                      : "form-control error-class"
+                  }
                 >
                   <option value="1">Student</option>
                   <option value="2">Faculty</option>
@@ -124,7 +148,7 @@ class Auth extends Component {
                 </select>
 
                 <p className="signup">
-                  <a href="/forgotpassword">Forgot password?</a>
+                  <a class="text-danger" href="/forgotpassword">Forgot password?</a>
                 </p>
 
                 <div className="text-center">
@@ -140,9 +164,8 @@ class Auth extends Component {
                     value="Login"
                     name="loginBtn"
                     disabled={!isFormValid}
-                    className={`login-btn ${
-                      isFormValid ? "enabled-btn" : "disabled-btn"
-                    }`}
+                    className={`login-btn ${isFormValid ? "enabled-btn" : "disabled-btn"
+                      }`}
                   />
                 </div>
               </form>

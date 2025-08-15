@@ -38,7 +38,7 @@
   position: relative;
   width: 50%;
   height: 100%;
-  background: #212121;
+  background: #ff4a17;
   transition: 0.5s;
 }
 
@@ -88,7 +88,7 @@
 Link {
   width: 100%;
   padding: 13px;
-  background: #212121;
+  background: #ff4a17;
   text-decoration: none;
   color: white;
   border: none;
@@ -104,15 +104,34 @@ Link {
 Link:hover {
   transition: 0.5s;
   text-decoration: none;
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+  box-shadow: 0 12px 16px 0 rgba(255, 255, 255, 1),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
-  color: grey;
+  color: rgb(255, 254, 254);
 }
+
+
 .section .container .user .formBx form input {
+  background: white;
+  color: black;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+
+.section .container .user .formBx form input.error-class {
+  background: #ff4a17;
+  color: white;
+}
+
+.section .container .user .formBx form select {
+  position: relative;
   width: 100%;
   padding: 10px;
-  background: #212121;
-  color: white;
+  background: white;
+  color: black;
   border: none;
   outline: none;
   box-shadow: none;
@@ -122,19 +141,14 @@ Link:hover {
   font-weight: 300;
 }
 
-.section .container .user .formBx form select {
-  position: relative;
-  width: 100%;
-  padding: 10px;
-  background: #212121;
-  color: #777;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  margin: 8px 0;
-  font-size: 14px;
-  letter-spacing: 1px;
-  font-weight: 300;
+/* Default black placeholder */
+.placeholder-black::placeholder {
+  color: black;
+}
+
+/* White placeholder when error */
+.placeholder-white::placeholder {
+  color: white;
 }
 
 .section .container .user .formBx form input[type="submit"] {

@@ -3,7 +3,7 @@
   }
   
   .input-container {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
   }
@@ -17,10 +17,9 @@
   }
   
   .error-space {
-    min-height: 18px; /* Reserve space for error messages */
-    font-size: 12px;
-    margin-top: 2px;
-    display: block;
+    min-height: 20px; /* enough space for one line of error text */
+    display: flex;
+    align-items: center;
   }
   
   .login-btn.enabled-btn {

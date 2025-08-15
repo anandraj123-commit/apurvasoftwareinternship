@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { MdError } from "react-icons/md";
 import ErrorMessage from "./ErrorMessage";
 import "../assets/css/Auth_2.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 class Auth_2 extends Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class Auth_2 extends Component {
         errors.password = "Password is required";
       } else if (!pwdRegex.test(value)) {
         errors.password =
-          "Password must be 8+ chars with uppercase, lowercase, number, and special char";
+          "Strong password with 8+ chars";
       } else {
         delete errors.password;
       }
@@ -115,8 +116,7 @@ class Auth_2 extends Component {
         <div className="container">
           <div className="user signinBx">
             <div className="imgBx">
-              <img src="" alt="Apurva Software Solutions Internship Programme" />
-              <p>Internship Management System</p>
+              <p>Apurva Internship Connect</p>
             </div>
             <div className="formBx">
               <form onSubmit={this.handleSubmit} autoComplete="off">
@@ -133,7 +133,11 @@ class Auth_2 extends Component {
                     value={username}
                     name="username"
                     placeholder="Username"
-                    className="form-control"
+                    className={
+                      !errors.username
+                        ? "input form-control placeholder-black"
+                        : "input form-control error-class placeholder-white"
+                    }
                     autoComplete="off"
                     onChange={this.handleChange}
                   />
@@ -152,7 +156,11 @@ class Auth_2 extends Component {
                     value={emailId}
                     name="emailId"
                     placeholder="Email ID"
-                    className="form-control"
+                    className={
+                      !errors.emailId
+                        ? "input form-control placeholder-black"
+                        : "input form-control error-class placeholder-white"
+                    }
                     autoComplete="off"
                     onChange={this.handleChange}
                   />
@@ -171,7 +179,11 @@ class Auth_2 extends Component {
                     value={password}
                     name="password"
                     placeholder="Password"
-                    className="form-control"
+                    className={
+                      !errors.password
+                        ? "input form-control placeholder-black"
+                        : "input form-control error-class placeholder-white"
+                    }
                     autoComplete="new-password"
                     onChange={this.handleChange}
                   />
@@ -184,24 +196,49 @@ class Auth_2 extends Component {
                   </div>
                 </div>
 
-                <div className="input-container">
-                  <input
-                    type="password"
-                    value={confirmpassword}
-                    name="confirmpassword"
-                    placeholder="Confirm Password"
-                    className="form-control"
-                    autoComplete="new-password"
-                    onChange={this.handleChange}
-                  />
-                  <div className="error-space">
-                    {errors.confirmpassword && (
-                      <small className="text-danger">
-                        <MdError /> {errors.confirmpassword}
-                      </small>
-                    )}
-                  </div>
-                </div>
+                <div className="input-container" style={{ position: "relative" }}>
+  <input
+    type={this.state.showConfirmPassword ? "text" : "password"} // 👈 toggle type
+    value={confirmpassword}
+    name="confirmpassword"
+    placeholder="Confirm Password"
+    className={
+      !errors.confirmpassword
+        ? "input form-control placeholder-black"
+        : "input form-control error-class placeholder-white"
+    }
+    autoComplete="new-password"
+    onChange={this.handleChange}
+  />
+  
+  {/* Eye Icon */}
+  <span
+    onClick={() =>
+      this.setState({
+        showConfirmPassword: !this.state.showConfirmPassword,
+      })
+    }
+    style={{
+      position: "absolute",
+      right: "12px",
+      top: "40%",
+      transform: "translateY(-50%)",
+      cursor: "pointer",
+      color: "#666",
+    }}
+  >
+    {this.state.showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+  </span>
+
+  <div className="error-space">
+    {errors.confirmpassword && (
+      <small className="text-danger">
+        <MdError /> {errors.confirmpassword}
+      </small>
+    )}
+  </div>
+</div>
+
 
                 <div className="text-center mt-3">
                   <Link className="btn-custom mr-2" to="/login">
